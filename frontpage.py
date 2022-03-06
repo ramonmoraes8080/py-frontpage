@@ -72,6 +72,7 @@ def get_custom_static_asset_file_paths():
 
 
 def build(args):
+    env = args.env
     cfg = open_cfg(args.config)
     theme_name = cfg["Basic"]["theme"]
     env = Environment(
@@ -79,7 +80,7 @@ def build(args):
         autoescape=select_autoescape()
     )
 
-    data = {'config': cfg} | build_context()
+    data = {'env': env, 'config': cfg} | build_context()
     dist_folder_path = './dist/'
 
     # Rendering Templates
@@ -140,6 +141,13 @@ if __name__ == "__main__":
     #    default=10,
     #    help='delay (secs) for next batch',
     #    )
+    build_parser.add_argument(
+        '-e',
+        '--env',
+        type=str,
+        default='dev',
+        help="Environment you're building for",
+        )
     build_parser.set_defaults(func=build)
 
     args = parser.parse_args()
